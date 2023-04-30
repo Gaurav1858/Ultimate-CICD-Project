@@ -30,7 +30,7 @@ agent {
     steps{
         script{
             withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin'
+                sh 'cd spring-boot-app && echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin'
             }
             sh 'cd spring-boot-app && docker push docker.io/knoldus1858/ultimate-cicd:v2'
         }
@@ -39,8 +39,8 @@ agent {
    stage('Deploy to k8s'){
             steps{
                 script{
-                    kubernetesDeploy (configs: 'spring-boot-app/deploymentservice.yaml',kubeconfigId: 'kubernetes')
-                    //sh 'kubectl apply -f deploymentservice.yaml'
+                    kubernetesDeploy (configs: 'spring-boot-app/deployment.yaml',kubeconfigId: 'kubernetes')
+                    //sh 'kubectl apply -f deployment.yaml'
                 }
             }
         }
